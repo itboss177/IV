@@ -1,7 +1,7 @@
 <?php
 // простой разбор .env без parse_ini_file
 $env = array();
-$envFile = __DIR__ . '/../.env';
+$envFile = __DIR__ . '/.env';
 if (is_readable($envFile)) {
     foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
         if (strpos($line, '=') === false) continue;
