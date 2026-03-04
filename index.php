@@ -22,8 +22,8 @@ echo '<h1 style="font-size:48px;margin:16px 0;font-family:Arial,Helvetica,sans-s
 echo '<div style="margin:8px 0;font-family:Arial,Helvetica,sans-serif;">OK: '.$pdo->query('SELECT NOW()')->fetchColumn().'</div>';
 
 echo <<<HTML
-<button id="blue-btn" style="padding:12px 20px;font-size:16px;background:#1e6de0;color:#fff;border:none;border-radius:6px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);">
-    Синяя кнопка
+<button id="blue-btn" style="padding:12px 20px;font-size:16px;background:transparent;color:#e31b23;border:2px solid #e31b23;border-radius:6px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.12);">
+    Пуск ракеты
 </button>
 <div style="margin-top:10px;font-size:16px;font-family:Arial,Helvetica,sans-serif;">
     Счётчик: <span id="click-count">0</span>
