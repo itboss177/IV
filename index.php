@@ -18,4 +18,5 @@ $pdo = new PDO($dsn, $env['DB_USER'], $env['DB_PASS'], array(
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ));
 
+echo '<h1 style="font-size:48px;margin:16px 0;font-family:Arial,Helvetica,sans-serif;">HELLO RYZHIY!!! HOW ARE YOU???</h1>';
 echo 'OK: '.$pdo->query('SELECT NOW()')->fetchColumn();
