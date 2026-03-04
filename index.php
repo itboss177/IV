@@ -50,6 +50,7 @@ echo <<<HTML
       color: var(--text);
       font-family: 'Onest', 'Manrope', system-ui, -apple-system, sans-serif;
       padding: 32px;
+      overflow: hidden;
     }
     .card {
       width: min(560px, 100%);
@@ -60,6 +61,8 @@ echo <<<HTML
       box-shadow: 0 20px 70px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
       backdrop-filter: blur(6px);
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
     h1 {
       margin: 0 0 14px;
@@ -102,6 +105,53 @@ echo <<<HTML
       font-size: 15px;
       color: var(--muted);
     }
+    .rocket {
+      position: fixed;
+      width: 6px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(227,27,35,0.6);
+      transform: translate(-50%, -50%);
+      animation: rocket-move 0.65s cubic-bezier(0.18, 0.6, 0.35, 1) forwards;
+      pointer-events: none;
+      z-index: 6;
+    }
+    .rocket::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 4px;
+      height: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(227,27,35,0));
+      transform: translateX(-50%);
+      filter: blur(1px);
+    }
+    @keyframes rocket-move {
+      to {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+        opacity: 0.95;
+      }
+    }
+    .particle {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      filter: drop-shadow(0 0 6px rgba(227,27,35,0.9));
+      transform: translate(-50%, -50%);
+      animation: particle-burst 0.9s ease-out forwards;
+      pointer-events: none;
+      z-index: 6;
+    }
+    @keyframes particle-burst {
+      to {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.6);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -118,10 +168,64 @@ echo <<<HTML
       var btn = document.getElementById('blue-btn');
       var counter = document.getElementById('click-count');
       var count = 0;
+
+      function rand(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function spawnParticles(x, y) {
+        for (var i = 0; i < 18; i++) {
+          var angle = Math.random() * Math.PI * 2;
+          var speed = rand(40, 120);
+          var dx = Math.cos(angle) * speed;
+          var dy = Math.sin(angle) * speed;
+          var p = document.createElement('span');
+          p.className = 'particle';
+          p.style.left = x + 'px';
+          p.style.top = y + 'px';
+          p.style.setProperty('--dx', dx + 'px');
+          p.style.setProperty('--dy', dy + 'px');
+          document.body.appendChild(p);
+          setTimeout(function(el) { el.remove(); }, 950, p);
+        }
+      }
+
+      function createRocket() {
+        var bodyRect = document.body.getBoundingClientRect();
+        var cx = bodyRect.width / 2;
+        var cy = bodyRect.height / 2;
+        var angle = Math.random() * Math.PI * 2;
+        var distance = rand(180, 340);
+        var dx = Math.cos(angle) * distance;
+        var dy = Math.sin(angle) * distance - rand(40, 120);
+
+        var rocket = document.createElement('div');
+        rocket.className = 'rocket';
+        rocket.style.left = cx + 'px';
+        rocket.style.top = cy + 'px';
+        rocket.style.setProperty('--dx', dx + 'px');
+        rocket.style.setProperty('--dy', dy + 'px');
+        document.body.appendChild(rocket);
+
+        setTimeout(function() {
+          var tx = cx + dx;
+          var ty = cy + dy;
+          spawnParticles(tx, ty);
+          rocket.remove();
+        }, 650);
+      }
+
+      function launchFireworks() {
+        for (var i = 0; i < 6; i++) {
+          setTimeout(createRocket, i * 90);
+        }
+      }
+
       if (btn && counter) {
         btn.addEventListener('click', function() {
           count += 1;
           counter.textContent = count;
+          launchFireworks();
         });
       }
     })();
